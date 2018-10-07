@@ -4,9 +4,9 @@ class DataStore {
   constructor(namespace) {
     this.DATASTORE_NAMESPACE = namespace;
     this.datastore = new Datastore({
-      namespace: this.DATASTORE_NAMESPACE,
+      projectId: 'f4-dev-circle',
       keyFilename: './f4_Dev_Circle-8dc57990bab6.json',
-      kind: 'default'
+      namespace: this.DATASTORE_NAMESPACE,
     });
   }
 

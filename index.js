@@ -30,7 +30,7 @@ app.use((err, req, res, next) => {
 })
 
 app.listen(3000, () => {
-  console.log('yes')
+  console.log('listening to port 3000')
 })
 
 module.exports = app

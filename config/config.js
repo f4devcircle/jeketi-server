@@ -15,7 +15,7 @@ const test = {
     "host": "127.0.0.1",
     "dialect": "postgres"
 }
-const production =  {
+const production = {
     "username": "root",
     "password": null,
     "database": "database_production",
@@ -25,7 +25,7 @@ const production =  {
 
 
 module.exports = {
-  development,
-  test,
-  production
+    development,
+    test,
+    production
 }

@@ -1,3 +1,4 @@
+require('dotenv').config()
 const express = require('express');
 const bodyParser = require('body-parser');
 const shows = require('./routes/shows.route')
@@ -29,8 +30,8 @@ app.use((err, req, res, next) => {
   })
 })
 
-app.listen(3000, () => {
-  console.log('listening to port 3000')
+app.listen(process.env.APPLICATION_PORT, () => {
+  console.log(`listening to port ${process.env.APPLICATION_PORT}`)
 })
 
 module.exports = app

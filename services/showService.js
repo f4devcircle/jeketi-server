@@ -4,7 +4,7 @@ moment.tz.setDefault('Asia/Jakarta');
 const datastore = new Datastore('shows');
 const axios = require('axios');
 const HALF_HOUR = 1000 * 60 * 30;
-const SCRAPER_URL = 'https://asia-northeast1-f4-dev-circle.cloudfunctions.net/jeketiscraper';
+const SCRAPER_URL = 'https://us-central1-f4-dev-circle.cloudfunctions.net/jeketiScraper';
 
 const notifySetlistURL = 'https://bot.kyla.life/v1/line/push';
 
@@ -47,7 +47,7 @@ const schedule = async () => {
     const latest = result[0][0].unixTime;
 
     const schedules = await axios.get(SCRAPER_URL)
-    schedules.data.map(show => {
+    schedules.data.map(async show => {
       const unixTime = moment(`${show.date} ${show.showTime}`, 'DD.MM.YYYY HH:mm').unix()
       show.unixTime = unixTime;
       if (unixTime > latest) {
@@ -67,8 +67,36 @@ const getMembersByShow = (showId) => {
   return datastore.getByKey('default', Number(showId))
 }
 
-const notifyMemberChange = showData => {
+const encode = (source, data) => {
+  return Buffer.from(JSON.stringify({
+    source,
+    data
+  })).toString('base64')
+}
 
+const decode = data => {
+  return Buffer.from(data, 'base64').toString()
+}
+
+const notifyMemberChange = showData => {
+  // const datastore = new Datastore()
+  // datastore.getByKey(Number(showData.unixTime))
+  // .then(result => {
+  //   if (result) {
+  //     const oldValue = result.members;
+  //     const newValue = showData.members;
+
+  //     let replaced = oldValue.filter(x => !newValue.includes(x));
+  //     let newMember = (newValue.filter(x => !oldValue.includes(x)));
+
+  //     axios.post()
+  //   } else {
+  //     datastore.insert('PastPerformer', null, {
+  //       previousData: null,
+  //       newData: encode(showData.members)
+  //     })
+  //   }
+  // })
 }
 
 const notifySetlistChange = showData => {

@@ -16,4 +16,4 @@ make sure nodejs is installed, then you can just type ```npm install``` and node
 make sure docker is installed, then you can run the build command with ```docker build <desired image name> .``` **Don't forget the '.' in the end of command**
 wait for it until it's done, then you can run using ```sudo docker run -d -p 3000:3000```
 
-**-d is detached, means it will run in the background -p <hostPort>:<instancePort>** is to map instance to the host
+**-d is detached, means it will run in the background -p \<hostPort\>:\<instancePort\>** is to map instance to the host

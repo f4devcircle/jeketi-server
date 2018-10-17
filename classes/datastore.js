@@ -8,6 +8,7 @@ class DataStore {
       keyFilename: './f4_Dev_Circle-8dc57990bab6.json',
       namespace: this.DATASTORE_NAMESPACE,
     });
+    this.KEY = Datastore.KEY;
   }
 
   queryDatastore(kind, filters) {

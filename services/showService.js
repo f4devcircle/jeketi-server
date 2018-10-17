@@ -80,31 +80,18 @@ const decode = data => {
 }
 
 const notifyMemberChange = async (showData, pastData) => {
-  console.log('member change')
   const ds = new Datastore()
   const NOW = moment().unix();
       const oldValue = pastData.members || [];
       const newValue = showData.members;
-
-      console.log(oldValue)
-      console.log(newValue)
-
-
       let replaced = oldValue.filter(x => !newValue.includes(x));
       let newMember = (newValue.filter(x => !oldValue.includes(x)));
       const showDetail = {...showData}
       showDetail.members = undefined
-
-      console.log(newMember)
-      console.log(replaced)
-
-
       Promise.mapSeries(replaced, async member => {
-        console.log('a')
         const result = await ds.queryDatastore('Member', [
           ['name', '=', member]
         ])
-
         return await axios.post(notifyURL, {
           type: 'member',
           action: 'delete',
@@ -112,23 +99,10 @@ const notifyMemberChange = async (showData, pastData) => {
           showData: showDetail
         })
       })
-
-
       Promise.mapSeries(newMember, async member => {
-        console.log('b')
         const result = await ds.queryDatastore('Member', [
           ['name', '=', member]
         ])
-
-        const obj = {
-            type: 'member',
-            action: 'add',
-            memberId: result[0][datastore.KEY].id,
-            showData: showDetail
-        }
-
-        console.log(obj)
-
         return await axios.post(notifyURL, {
           type: 'member',
           action: 'add',
@@ -145,7 +119,6 @@ const notifyMemberChange = async (showData, pastData) => {
 }
 
 const notifySetlistChange = async showData => {
-  console.log('setlist change')
   const showDetail = {...showData}
   showDetail.members = undefined
 
@@ -153,9 +126,6 @@ const notifySetlistChange = async showData => {
     type: 'setlist',
     showData: showDetail
   }
-
-  console.log(obj)
-
   return await axios.post(notifyURL, obj)
 }
 

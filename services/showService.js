@@ -1,23 +1,23 @@
 const Datastore = require('../classes/datastore');
 const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Jakarta');
-const datastore = new Datastore('shows');
+const datastore = new Datastore();
 const axios = require('axios');
-const HALF_HOUR = 1000 * 60 * 30;
+const FIVE_MINUTES = 1000 * 60 * 5;
 const Promise = require('bluebird');
 const SCRAPER_URL = 'https://asia-northeast1-f4-dev-circle.cloudfunctions.net/jeketiscraper';
 
-const notifyURL = 'https://indy.ngrok.io/v1/line/push';
+const notifyURL = 'https://bot.kyla.life/v1/line/push';
 
 const findAll = () => {
   const NOW = moment().unix();
-  return datastore.queryDatastore('default', [
+  return datastore.queryDatastore('Show', [
     ['unixTime', '>', NOW]
   ])
 }
 
 const getByMember = async (memberName) => {
-  const shows = await datastore.queryDatastore('default', [
+  const shows = await datastore.queryDatastore('Show', [
     ['unixTime', '>', NOW]
   ])
   const result = []
@@ -32,51 +32,47 @@ const getByMember = async (memberName) => {
 
 const getBySetlist = (setlistName) => {
   const NOW = moment().unix();
-  return datastore.queryDatastore('default', [
+  return datastore.queryDatastore('Show', [
     ['unixTime', '>', NOW],
     ['showName', '=', setlistName]
   ])
 }
 
 const schedule = async () => {
-  setInterval(async () => {
-    const query = datastore.datastore.createQuery('default').order('unixTime', {
-        descending: true
-      })
-      .limit(1)
-    const result = await datastore.datastore.runQuery(query)
-    const latest = result[0][0].unixTime;
+  try {
+    setInterval(async () => {
+      console.log(moment().format('DD-MM-YYYY HH-mm-ss'))
+      const query = datastore.datastore.createQuery('Show').order('unixTime', {
+          descending: true
+        })
+        .limit(1)
+      const result = await datastore.datastore.runQuery(query)
+      const latest = result[0][0].unixTime;
 
-    const schedules = await axios.get(SCRAPER_URL)
-    schedules.data.map(async show => {
-      const unixTime = moment(`${show.date} ${show.showTime}`, 'DD.MM.YYYY HH:mm').unix()
-      show.unixTime = unixTime;
-      if (unixTime > latest) {
-        notifySetlistChange(show)
-        datastore.insert('default', unixTime, show);
-      } else {
-        const saveResult = await datastore.insert('default', unixTime, show);
-        if (saveResult[0].indexUpdates > 0) {
-          notifyMemberChange(show)
+      const schedules = await axios.get(SCRAPER_URL)
+      schedules.data.map(async show => {
+        const unixTime = moment(`${show.date} ${show.showTime}`, 'DD.MM.YYYY HH:mm').unix()
+        show.unixTime = unixTime;
+        show.members ? show.members : show.members = null
+        if (unixTime > latest) {
+          notifySetlistChange(show)
+          datastore.insert('Show', unixTime, show);
+        } else {
+          const pastData = await datastore.getByKey('Show', unixTime)
+          const saveResult = await datastore.insert('Show', unixTime, show);
+          if (saveResult[0].indexUpdates > 0) {
+            notifyMemberChange(show, pastData)
+          }
         }
-      }
-    })
-  }, HALF_HOUR)
+      })
+    }, FIVE_MINUTES)
+  } catch (e) {
+    console.error(e)
+  }
 }
 
 const getMembersByShow = (showId) => {
-  return datastore.getByKey('default', Number(showId))
-}
-
-const encode = (source, data) => {
-  return Buffer.from(JSON.stringify({
-    source,
-    data
-  })).toString('base64')
-}
-
-const decode = data => {
-  return Buffer.from(data, 'base64').toString()
+  return datastore.getByKey('Show', Number(showId))
 }
 
 const notifyMemberChange = async (showData, pastData) => {
@@ -92,29 +88,35 @@ const notifyMemberChange = async (showData, pastData) => {
         const result = await ds.queryDatastore('Member', [
           ['name', '=', member]
         ])
-        return await axios.post(notifyURL, {
+        const data = {
           type: 'member',
           action: 'delete',
           memberId: result[0][datastore.KEY].id,
           showData: showDetail
-        })
+        }
+        console.log("updating data")
+        console.log(data)
+        return await axios.post(notifyURL, data)
       })
       Promise.mapSeries(newMember, async member => {
         const result = await ds.queryDatastore('Member', [
           ['name', '=', member]
         ])
-        return await axios.post(notifyURL, {
+        const data = {
           type: 'member',
           action: 'add',
           memberId: result[0][datastore.KEY].id,
           showData: showDetail
-        })
+        }
+        console.log("updating data")
+        console.log(data)
+        return await axios.post(notifyURL, data)
       })
 
       return await ds.insert('PastPerformer', null, {
-        previousData: encode(pastData),
-        newData: encode(showData),
-        updatedAt: NOW
+        previousData: pastData,
+        newData: showData,
+        updatedAt: NOW,
       })
 }
 
@@ -126,6 +128,8 @@ const notifySetlistChange = async showData => {
     type: 'setlist',
     showData: showDetail
   }
+  console.log('updating setlist')
+  console.log(obj)
   return await axios.post(notifyURL, obj)
 }
 

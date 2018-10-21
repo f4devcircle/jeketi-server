@@ -99,7 +99,7 @@ const schedule = async () => {
   }
 }
 
-const getMembersByShow = (showId) => {
+const getMembersByShow = async (showId) => {
   const result = await datastore.queryDatastore('Show', [
     ['unixTime', '=', showId]
   ])

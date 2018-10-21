@@ -79,13 +79,13 @@ const schedule = async () => {
         if (show.unixTime > latest) {
           changed = true
           notifySetlistChange(show)
-          datastore.insert('Show', show.unixTime, show);
+          datastore.insert('Show', null, show);
         } else {
-          const pastData = await datastore.getByKey('Show', show.unixTime)
-          const saveResult = await datastore.insert('Show', show.unixTime, show);
+          const pastData = await datastore.queryDatastore('Show', [ [ 'unixTime', '=', show.unixTime] ])
+          const saveResult = await datastore.insert('Show', null, show);
           if (saveResult[0].indexUpdates > 0) {
             changed = true
-            notifyMemberChange(show, pastData)
+            notifyMemberChange(show, pastData[0])
           }
         }
       })
@@ -100,7 +100,10 @@ const schedule = async () => {
 }
 
 const getMembersByShow = (showId) => {
-  return datastore.getByKey('Show', Number(showId))
+  const result = await datastore.queryDatastore('Show', [
+    ['unixTime', '=', showId]
+  ])
+  return result[0]
 }
 
 const notifyMemberChange = async (showData, pastData) => {

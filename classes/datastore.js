@@ -29,10 +29,17 @@ class DataStore {
   }
 
   insert(kind, key, data) {
-    return this.datastore.upsert({
-      key: this.datastore.key([kind, key]),
-      data,
-    });
+    if (key) {
+      return this.datastore.upsert({
+        key: this.datastore.key([kind, key]),
+        data,
+      });
+    } else {
+      return this.datastore.upsert({
+        key: this.datastore.key(kind),
+        data
+      });
+    }
   }
 }
 

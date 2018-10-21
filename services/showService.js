@@ -74,7 +74,7 @@ const schedule = async () => {
       const latest = result[0][0].unixTime;
       let changed = false
       const schedules = await axios.get(SCRAPER_URL)
-      schedules.data.map(async show => {
+      await schedules.data.map(async show => {
         show.members ? show.members : show.members = null
         if (show.unixTime > latest) {
           changed = true
@@ -112,7 +112,7 @@ const notifyMemberChange = async (showData, pastData) => {
       let newMember = (newValue.filter(x => !oldValue.includes(x)));
       const showDetail = {...showData}
       showDetail.members = undefined
-      Promise.mapSeries(replaced, async member => {
+      await Promise.mapSeries(replaced, async member => {
         const result = await ds.queryDatastore('Member', [
           ['name', '=', member]
         ])
@@ -126,7 +126,7 @@ const notifyMemberChange = async (showData, pastData) => {
         console.log(data)
         return await axios.post(notifyURL, data)
       })
-      Promise.mapSeries(newMember, async member => {
+      await Promise.mapSeries(newMember, async member => {
         const result = await ds.queryDatastore('Member', [
           ['name', '=', member]
         ])

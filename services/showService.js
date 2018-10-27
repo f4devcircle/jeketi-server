@@ -1,3 +1,4 @@
+require('dotenv').config();
 const Datastore = require('../classes/datastore');
 const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Jakarta');
@@ -5,7 +6,7 @@ const datastore = new Datastore();
 const axios = require('axios');
 const FIVE_MINUTES = 1000 * 60 * 5;
 const Promise = require('bluebird');
-const SCRAPER_URL = 'https://asia-northeast1-f4-dev-circle.cloudfunctions.net/jeketiscraper';
+const SCRAPER_URL = process.env.SCRAPER_URL;
 const redis = require('redis')
 Promise.promisifyAll(redis.RedisClient.prototype);
 Promise.promisifyAll(redis.Multi.prototype);
@@ -18,7 +19,7 @@ client.on("error", function (err) {
   console.log("Error " + err);
 });
 
-const notifyURL = 'https://bot.kyla.life/v1/line/push';
+const notifyURL = process.env.NOTIFY_URL;
 
 const findAll = () => {
   const NOW = moment().unix();
@@ -55,10 +56,12 @@ const getBySetlist = async setlistName => {
       })
       return result
     } else {
-      return datastore.queryDatastore('Show', [
-        ['unixTime', '>', NOW],
-        ['showName', '=', setlistName]
+      const result = await datastore.queryDatastore('Show', [
+        ['unixTime', '>', NOW]
       ])
+      await setData('Show', {data: result})
+      return getBySetlist(setlistName)
+      // return result
     }
   } catch (e) {
     console.error(e)

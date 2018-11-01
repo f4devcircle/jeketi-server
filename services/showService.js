@@ -4,7 +4,7 @@ const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Jakarta');
 const datastore = new Datastore();
 const axios = require('axios');
-const FIVE_MINUTES = 1000 * 60 * 5;
+const ONE_MINUTE = 1000 * 60;
 const Promise = require('bluebird');
 const SCRAPER_URL = process.env.SCRAPER_URL;
 const redis = require('redis')
@@ -96,7 +96,7 @@ const schedule = async () => {
       if (changed) {
         setData('Show', {data: schedules.data})
       }
-    }, FIVE_MINUTES)
+    }, ONE_MINUTE)
   } catch (e) {
     console.error(e)
   }
@@ -115,7 +115,7 @@ const notifyMemberChange = async (showData, pastData) => {
       let newMember = (newValue.filter(x => !oldValue.includes(x)));
       const showDetail = {...showData}
       showDetail.members = undefined
-      await Promise.mapSeries(replaced, async member => {
+      await Promise.map(replaced, async member => {
         const result = await ds.queryDatastore('Member', [
           ['name', '=', member]
         ])
@@ -129,7 +129,7 @@ const notifyMemberChange = async (showData, pastData) => {
         console.log(data)
         return await axios.post(notifyURL, data)
       })
-      await Promise.mapSeries(newMember, async member => {
+      await Promise.map(newMember, async member => {
         const result = await ds.queryDatastore('Member', [
           ['name', '=', member]
         ])

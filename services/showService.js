@@ -83,6 +83,9 @@ const schedule = async () => {
           changed = true
           notifySetlistChange(show)
           datastore.insert('Show', show.unixTime, show);
+          if (show.members) {
+            notifyMemberChange(showData, null)
+          }
         } else {
           const pastData = await datastore.getByKey('Show', show.unixTime)
           const saveResult = await datastore.insert('Show', show.unixTime, show);

@@ -16,10 +16,10 @@ const test = {
     "dialect": "postgres"
 }
 const production = {
-    "username": "jeketi_backend",
-    "password": "toleko",
-    "database": "jeketibot_backend",
-    "host": "35.194.119.31",
+    "username": process.env.DB_USERNAME,
+    "password": process.env.DB_PASSWORD,
+    "database": process.env.DB_NAME,
+    "host": process.env.DB_IP,
     "dialect": "postgres"
 }
 

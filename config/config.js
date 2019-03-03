@@ -1,10 +1,10 @@
 require('dotenv').config()
 
 const development = {
-    "username": process.env.DB_USERNAME,
-    "password": process.env.DB_PASSWORD,
-    "database": process.env.DB_NAME,
-    "host": process.env.DB_IP,
+    "username": 'naskapal',
+    "password": null,
+    "database": 'jeketi-server',
+    "host": '127.0.0.1',
     "dialect": "postgres"
 }
 
@@ -16,10 +16,10 @@ const test = {
     "dialect": "postgres"
 }
 const production = {
-    "username": "root",
-    "password": null,
-    "database": "database_production",
-    "host": "127.0.0.1",
+    "username": "jeketi_backend",
+    "password": "toleko",
+    "database": "jeketibot_backend",
+    "host": "35.194.119.31",
     "dialect": "postgres"
 }
 

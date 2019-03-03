@@ -1,17 +1,26 @@
-require('dotenv').config()
+require('dotenv').config();
+const https = require('https');
+const fs = require('fs');
 const express = require('express');
 const bodyParser = require('body-parser');
-const shows = require('./routes/shows.route')
-const scrapeSchedule = require('./services/showService')
+const shows = require('./routes/shows.route');
+const scrapeSchedule = require('./services/showService');
+const memberScrape = require('./services/membersService');
+const auth = require('./routes/auth');
+const buy = require('./routes/buy');
+const cors = require('cors');
 
-scrapeSchedule.schedule()
+scrapeSchedule.schedule();
+memberScrape.membersScheduler();
 
 const app = express();
 
-app.use(bodyParser.json())
-app.use(bodyParser.urlencoded({ extended: false }))
-
-app.use('/shows', shows)
+app.use(bodyParser.json());
+app.use(bodyParser.urlencoded({ extended: false }));
+app.use(cors());
+app.use('/shows', shows);
+app.use('/auth', auth);
+app.use('/buy', buy);
 
 // catch 404 and forward to error handler
 app.use((req, res, next) => {

@@ -2,7 +2,7 @@ require('dotenv').config();
 const Datastore = require('../classes/datastore');
 const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Jakarta');
-const datastore = new Datastore();
+const datastore = new Datastore('dev');
 const axios = require('axios');
 const ONE_MINUTE = 1000 * 60;
 const Promise = require('bluebird');
@@ -84,7 +84,7 @@ const schedule = async () => {
           notifySetlistChange(show)
           datastore.insert('Show', show.unixTime, show);
           if (show.members) {
-            notifyMemberChange(showData, null)
+            notifyMemberChange(show, null)
           }
         } else {
           const pastData = await datastore.getByKey('Show', show.unixTime)

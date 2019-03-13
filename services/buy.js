@@ -8,6 +8,7 @@ const tough = require('tough-cookie');
 const Model = require('../models')
 moment.tz.setDefault('Asia/Jakarta');
 const cookieDB = Model.user_cookie;
+const ticketDB = Model.ticket_transactions;
 const ticket_transactions = Model.ticket_transactions;
 
 
@@ -43,9 +44,7 @@ const login = async (cookie) => {
   });
   const jar = r.jar();
   jar._jar = toughCookieJar;
-  const homepage = (await get('mypage?lang=id', {
-    jar
-  })).body;
+  
   return jar;
 }
 
@@ -144,10 +143,15 @@ const getFinalPage = async (url, jar, form, confirm) => {
         jar
       })
       if (response.statusCode === 200) {
-          return true
+        return {
+          success: true
+        }
       }
     } else {
-      return purchaseDetails;
+      const e = new Error();
+      e.type = 'NEED_CONFIRMATION';
+      e.purchaseDetails = purchaseDetails;
+      throw e;
     }
   }
 }
@@ -168,14 +172,14 @@ const confirmationPageForm = async (link, paymentOption, ticketType, jar) => {
   })
   $('#payment_method option').each((i, el) => {
     const $el = $(el);
-    if ($el.text().toLowerCase() === paymentOption.toLowerCase()) {
+    if (paymentOption && $el.text().toLowerCase() === paymentOption.toLowerCase()) {
       form.payment_method = $el.val();
     }
     payment_methods.push($el.text())
   })
   $('#attribute option').each((i, el) => {
     const $el = $(el);
-    if ($el.text().toLowerCase() === ticketType.toLowerCase()) {
+    if (ticketType && $el.text().toLowerCase() === ticketType.toLowerCase()) {
       form.attribute = $el.val();
     }
     ticket_types.push($el.text());
@@ -236,14 +240,27 @@ const purchaseTicket = async (lineId, timestamp, options) => {
   try {
     // convert to unix time
     // moment('26.2.2019 19:00', 'DD.M.YYYY HH:mm').unix()
-
-    if (moment.now() > timestamp) {
+    if (moment.now() > (timestamp * 1000)) {
       const e = new Error();
       e.type = 'NOT_FOUND';
       e.message = 'NO SHOW FOUND';
       throw e;
     }
 
+    const purchaseReceipt = await ticketDB.find({
+      where: {
+        lineId,
+        timestamp
+      }
+    })
+
+    if (purchaseReceipt) {
+      const e = new Error();
+      e.type = 'ALREADY_BOUGHT';
+      e.message = 'TICKET ALREADY PURCHASED';
+      throw e
+    } else {
+      
     const {
       ticketClass
     } = options;
@@ -261,7 +278,7 @@ const purchaseTicket = async (lineId, timestamp, options) => {
       const buyResult = await buyTicket(date, time, options, jar);
       if (buyResult.result) {
         const saveResult = await ticket_transactions.create({
-          id: lineId,
+          lineId,
           timestamp,
           ticket_class: options.ticketClass,
           email,
@@ -282,6 +299,7 @@ const purchaseTicket = async (lineId, timestamp, options) => {
       e.message = 'TICKET TYPE IS NEEDED OR INVALID';
       throw e;
     }
+    }
   } catch (e) {
     console.error(e);
     throw e;
@@ -289,7 +307,45 @@ const purchaseTicket = async (lineId, timestamp, options) => {
 }
 
 
+const getPoint = async (lineId) => {
+  try {
+    const userCookie = await cookieDB.findByPk(lineId);
+
+    if (userCookie && userCookie.cookie) {
+
+      const fs = require("fs");
+      const myFile = fs.createWriteStream("myOutput.html");
+
+      const jar = await login(userCookie.cookie);
+      const profilePage = (await get('mypage?lang=id', {
+        jar
+      })).body;
+
+      const userProfile = {};
+      const page = cheerio.load(profilePage);
+      page('.mypageWrap').each( (i, el) => {
+        if (i !== 7 || i !== 8 || i !== 9) {
+          const $wrapper = cheerio.load(el);
+          userProfile[$wrapper('.profileleft').text()] = $wrapper('.profileright').text().trim()
+        }
+      })
+      console.log(userProfile)
+    } else {
+      const e = new Error();
+      e.type = 'NOT_LOGGED_IN';
+      e.message = 'USER IS NOT LOGGED IN';
+      throw e;
+    }
+
+    
+  } catch (e) {
+    console.error(e);
+    throw e;
+  }
+}
+
 
 module.exports = {
-  purchaseTicket
+  purchaseTicket,
+  getPoint
 }

@@ -4,10 +4,13 @@ const axios = require('axios');
 
 const login = async (email, password, lineId) => {
   try {
-    const cookieString = await axios.post('https://us-central1-f4-dev-circle.cloudfunctions.net/login-service', {
+    const response = await axios.post('https://asia-northeast1-f4-dev-circle.cloudfunctions.net/login-service', {
       email,
       password
     });
+
+    const cookieString = response.data.cookies;
+
     await cookieDB.create({
       id: lineId,
       cookie: cookieString,

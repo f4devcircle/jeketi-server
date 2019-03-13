@@ -23,6 +23,7 @@ const buyticket = async (req, res) => {
 
   try {
     const purchaseResult = await buy.purchaseTicket(lineId, timestamp, options);
+    res.status(200).send(purchaseResult);
   } catch (e) {
     res.status(200).send({
       error: e
@@ -31,8 +32,22 @@ const buyticket = async (req, res) => {
 
 }
 
+const getPoint = async (req, res) => {
+  const { lineId } = req.params;
+  console.log(`getting point for userId ${lineId}`);
+  try {
+    const points = await buy.getPoint(lineId);
+    res.status(200).send(points);
+  } catch (e) {
+    res.status(400).send({
+      error: e
+    })
+  }
+} 
+
 
 
 module.exports = {
-  buyticket
+  buyticket,
+  getPoint
 }

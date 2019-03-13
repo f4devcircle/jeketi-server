@@ -2,9 +2,11 @@
 module.exports = (sequelize, DataTypes) => {
   const ticket_transactions = sequelize.define('ticket_transactions', {
     id: {
-      type: DataTypes.STRING,
-      primaryKey: true
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true
     },
+    lineId: DataTypes.STRING,
     timestamp: DataTypes.INTEGER,
     ticket_class: DataTypes.STRING,
     email: DataTypes.TEXT,

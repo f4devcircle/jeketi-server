@@ -37,7 +37,7 @@ const logout = (req, res) => {
   .catch(err => {
     console.error(err);
     res.status(500)
-    res.send({ msg: 'jot bangsat'});
+    res.send({ msg: err});
   })
 }
 

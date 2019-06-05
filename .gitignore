@@ -1,7 +1,3 @@
 node_modules
 ignore
 .idea
-*.json
-*.html
-*.txt
-.env

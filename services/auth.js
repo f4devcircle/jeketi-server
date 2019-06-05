@@ -1,10 +1,11 @@
+require('dotenv').config();
 const Model = require('../models');
 const cookieDB = Model.user_cookie;
 const axios = require('axios');
 
 const login = async (email, password, lineId) => {
   try {
-    const response = await axios.post('https://asia-northeast1-f4-dev-circle.cloudfunctions.net/login-service', {
+    const response = await axios.post(process.env.PPTR, {
       email,
       password
     });

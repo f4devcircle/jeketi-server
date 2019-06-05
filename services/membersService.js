@@ -3,7 +3,7 @@ const {Storage} = require('@google-cloud/storage');
 const Datastore = require('../classes/datastore');
 const moment = require('moment-timezone');
 moment.tz.setDefault('Asia/Jakarta');
-const datastore = new Datastore('dev');
+const datastore = new Datastore();
 const Axios = require('axios');
 const ONE_HOUR = 1000 * 60 * 60 * 1;
 const MEMBERS_SCRAPER_URL = process.env.MEMBERS_SCRAPER_URL;
@@ -86,7 +86,7 @@ const savePhoto = async (url, memberName) => {
       }
     }))
   
-    file.on('done', () =>{
+    file.on('finish', () => {
       // console.log(`done uploading ${memberName}`)
       resolve()
     })

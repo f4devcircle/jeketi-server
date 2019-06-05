@@ -11,7 +11,7 @@
   "dependencies": {
     "@google-cloud/datastore": "^2.0.0",
     "@google-cloud/storage": "^2.1.0",
-    "axios": "^0.18.0",
+    "axios": "^0.19.0",
     "basic-auth": "^2.0.1",
     "bluebird": "^3.5.2",
     "cheerio": "^1.0.0-rc.2",
@@ -23,8 +23,7 @@
     "pg": "^7.5.0",
     "redis": "^2.8.0",
     "request": "^2.88.0",
-    "sequelize": "^4.42.0",
-    "sequelize-mock": "^0.10.2"
+    "sequelize": ">=5.3.0"
   },
   "devDependencies": {
     "jest": "^24.5.0"

@@ -23,8 +23,8 @@ const checkLogin = (req, res) => {
     isLoggedIn: result
   }))
   .catch(err => {
-    console.log(errmsg);
-    res.status(500).send(errmsg);
+    console.log(err);
+    res.status(500).send(err);
   });
 }
 

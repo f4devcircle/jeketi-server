@@ -11,9 +11,6 @@ const jkt_Responses = {
   "theater/buy?timestamp=1560254400": fs.readFileSync('./test/mockPage/initialPurchasePage.html', 'utf-8'),
   "/ticket/apply/id/1851/type/3/show/2?lang=id": fs.readFileSync('./test/mockPage/groupFillForm.html', 'utf-8'),
   "/ticket/apply-group/id/1867/type/3/show/2?lang=id": fs.readFileSync('./test/mockPage/finalpage.html', 'utf-8'),
-  "/ticket/apply-comp/id/1851/type/3/show/2?lang=id": {
-    statusCode: 200
-  }
 }
 
 const timestamp = 1560254400;
@@ -22,6 +19,9 @@ const timestamp = 1560254400;
 
 const mockRequest = {
   get: jest.fn(url => {
+    if (url === "/ticket/apply-comp/id/1851/type/3/show/2?lang=id") {
+      return Promise.resolve({statusCode: 200})
+    }
     return Promise.resolve({
       body: jkt_Responses[url]
     });

@@ -22,8 +22,6 @@ const timestamp = 1560254400;
 
 const mockRequest = {
   get: jest.fn(url => {
-    console.log('HAI JESSLYN');
-    console.log(url);
     return Promise.resolve({
       body: jkt_Responses[url]
     });

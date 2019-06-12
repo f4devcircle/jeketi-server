@@ -142,7 +142,7 @@ class Buy {
         // buy the f in ticket
         const response = (await this.get(href, {
           jar
-        })).body;
+        }));
         if (response.statusCode === 200) {
           return {
             success: true

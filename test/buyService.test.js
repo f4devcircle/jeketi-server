@@ -22,6 +22,8 @@ const timestamp = 1560254400;
 
 const mockRequest = {
   get: jest.fn(url => {
+    console.log('HAI JESSLYN');
+    console.log(url);
     return Promise.resolve({
       body: jkt_Responses[url]
     });
@@ -53,6 +55,7 @@ test('Buy Service Ticket Should send confirmation for buying', async done => {
   buy.cookieDB = mockCookieDB;
   buy.get = mockRequest.get;
   buy.post = mockRequest.get;
+  buy.now = timestamp + 500;
 
   try {
     await buy.purchaseTicket(ticketPurchaseRequest.lineId, timestamp, ticketPurchaseRequest.options);

@@ -11,6 +11,7 @@ class Buy {
     this.parser = require('./parser');
     this.Model = require('../models')
     this.cookieDB = this.Model.user_cookie;
+    this.now = moment.now();
     this.ticket_transactions = this.Model.ticket_transactions;
 
     // 
@@ -299,7 +300,7 @@ class Buy {
       // convert to unix time
       // moment('26.2.2019 19:00', 'DD.M.YYYY HH:mm').unix()
 
-      if (moment.now() > (timestamp * 1000)) {
+      if (this.now > (timestamp * 1000)) {
         const e = new Error();
         e.type = 'NOT_FOUND';
         e.message = 'NO SHOW FOUND';

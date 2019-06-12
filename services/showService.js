@@ -12,7 +12,7 @@ Promise.promisifyAll(redis.RedisClient.prototype);
 Promise.promisifyAll(redis.Multi.prototype);
 
 const client = redis.createClient({
-  host: '192.168.0.2'
+  host: process.env.REDIS_HOST
 });
 
 client.on("error", function (err) {

@@ -37,65 +37,6 @@ class Buy {
     this.post = Promise.promisify(this.req.post);
   }
 
-  async purchaseTicket(lineId, timestamp, options) {
-    try {
-      // convert to unix time
-      // moment('26.2.2019 19:00', 'DD.M.YYYY HH:mm').unix()
-
-      if (moment.now() > (timestamp * 1000)) {
-        const e = new Error();
-        e.type = 'NOT_FOUND';
-        e.message = 'NO SHOW FOUND';
-        throw e;
-      }
-
-      const {
-        ticketClass
-      } = options;
-
-      const {
-        cookie,
-        email
-      } = await this.cookieDB.findByPk(lineId);
-
-      const ticketClasses = new Set(['GEN', 'VIP', 'OFC']);
-      if (ticketClasses.has(ticketClass)) {
-        const date = moment(timestamp * 1000).format('DD.M.YYYY');
-        const time = moment(timestamp * 1000).format('HH:mm');
-        const jar = await this.login(cookie);
-        const buyResult = await this.buyTicket(date, time, options, jar);
-        console.log(`buy ticket for line id ${lineId} with options ${JSON.stringify(options)}`);
-        console.log('==================================')
-        console.log(buyResult);
-        if (buyResult.success) {
-          const saveResult = await ticket_transactions.create({
-            lineId,
-            timestamp,
-            ticket_class: options.ticketClass,
-            email,
-            payment_option: options.paymentOption,
-            ticket_type: options.ticketType
-          })
-          if (saveResult) {
-            return {
-              success: true
-            }
-          }
-        } else {
-          return buyResult;
-        }
-      } else {
-        const e = new Error();
-        e.type = 'NEED_TICKET_TYPE';
-        e.message = 'TICKET TYPE IS NEEDED OR INVALID';
-        throw e;
-      }
-    } catch (e) {
-      console.error(e);
-      throw e;
-    }
-  }
-
   async login(cookie) {
     const kue = cookie.split(';');
     const toughCookieJar = new tough.CookieJar(undefined, {

@@ -1,11 +1,14 @@
 'use strict';
 module.exports = (sequelize, DataTypes) => {
   const member = sequelize.define('member', {
-    member_id: DataTypes.INTEGER,
-    name: DataTypes.STRING,
+    name: {
+      type: DataTypes.STRING,
+      unique: true
+    },
     team: DataTypes.STRING,
-    slug: DataTypes.STRING,
-    image_url: DataTypes.STRING
+    image_url: DataTypes.STRING,
+    active: DataTypes.BOOLEAN,
+    datastore_id: DataTypes.STRING
   }, {});
   member.associate = function(models) {
     // associations can be defined here

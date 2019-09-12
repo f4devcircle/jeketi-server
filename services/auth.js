@@ -19,7 +19,7 @@ const login = async (email, password, lineId) => {
     });
   } catch (e) {
     console.error(e);
-    throw e;
+    throw e.response.data;
   }
 };
 

@@ -10,7 +10,6 @@ module.exports = {
       },
       trx_id: {
         type: Sequelize.STRING,
-        unique: true,
         allowNull: false,
       },
       payment_method_id: {
@@ -51,7 +50,7 @@ module.exports = {
       },
       status: {
         type: Sequelize.ENUM({
-          'values': ['WAITING_FOR_PAYMENT', 'PAYMENT_RECEIVED', 'COMPLETED', 'EXPIRED']
+          'values': ['CREATED', 'WAITING_FOR_PAYMENT', 'PAYMENT_RECEIVED', 'COMPLETED', 'EXPIRED']
         })
       },
       expiredAt: {
@@ -69,7 +68,8 @@ module.exports = {
       }
     });
   },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('transactions');
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('transactions');
+    return queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_transactions_status";')
   }
 };

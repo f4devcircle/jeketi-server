@@ -13,7 +13,7 @@ module.exports = {
       },
       status: {
         type: Sequelize.ENUM({
-          'values': ['WAITING_FOR_PAYMENT', 'PAYMENT_RECEIVED', 'COMPLETED', 'EXPIRED']
+          'values': ['CREATED', 'WAITING_FOR_PAYMENT', 'PAYMENT_RECEIVED', 'COMPLETED', 'EXPIRED']
         })
       },
       createdAt: {
@@ -28,7 +28,8 @@ module.exports = {
       }
     });
   },
-  down: (queryInterface, Sequelize) => {
-    return queryInterface.dropTable('transaction_logs');
+  down: async (queryInterface, Sequelize) => {
+    await queryInterface.dropTable('transaction_logs');
+    return queryInterface.sequelize.query('DROP TYPE IF EXISTS "enum_transaction_logs_status";')
   }
 };

@@ -7,11 +7,21 @@ const getAll = async (req, res, next) => {
 }
 
 const getBySetlist = async (req, res, next) => {
-  res.send(await showsDatastore.getBySetlist(req.params.setList))
+  const setlists = await showsDatastore.getBySetlist(req.params.setList);
+  if (setlists) {
+    res.send(setlists);
+  } else {
+    res.status(404).send('not found')
+  }
 }
 
 const getMembersByShow = async (req, res, next) => {
-  res.send(await showsDatastore.getMembersByShow(req.params.showId))
+  const performers = await showsDatastore.getMembersByShow(req.params.showId);
+  if (performers) {
+    res.send(performers);
+  } else {
+    res.status(404).send('not found');
+  }
 }
 
 module.exports = {

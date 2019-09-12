@@ -54,7 +54,7 @@ const getBySetlist = async setlistName => {
           result.push(schedule)
         }
       })
-      return result
+      return result.length ? result : null;
     } else {
       const result = await datastore.queryDatastore('Show', [
         ['unixTime', '>', NOW]
@@ -105,8 +105,9 @@ const schedule = async () => {
   }
 }
 
-const getMembersByShow = (showId) => {
-  return datastore.getByKey('Show', Number(showId))
+const getMembersByShow = async (showId) => {
+  const result = await datastore.getByKey('Show', Number(showId))
+  return result ? result : null;
 }
 
 const notifyMemberChange = async (showData, pastData) => {

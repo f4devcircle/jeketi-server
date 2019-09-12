@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
     grand_total: DataTypes.INTEGER,
     status: {
       type: DataTypes.ENUM({
-        'values': ['WAITING_FOR_PAYMENT', 'PAYMENT_RECEIVED', 'COMPLETED', 'EXPIRED']
+        'values': ['CREATED', 'WAITING_FOR_PAYMENT', 'PAYMENT_RECEIVED', 'COMPLETED', 'EXPIRED']
       })
     },
     expiredAt: DataTypes.DATE

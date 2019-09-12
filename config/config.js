@@ -5,7 +5,9 @@ const development = {
     "password": null,
     "database": 'jeketi-server',
     "host": '127.0.0.1',
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "logging": console.log,
+    "timezone": '+07:00'
 }
 
 const test = {
@@ -13,14 +15,16 @@ const test = {
     "password": null,
     "database": "database_test",
     "host": "127.0.0.1",
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "timezone": '+07:00'
 }
 const production = {
     "username": process.env.DB_USERNAME,
     "password": process.env.DB_PASSWORD,
     "database": process.env.DB_NAME,
     "host": process.env.DB_IP,
-    "dialect": "postgres"
+    "dialect": "postgres",
+    "timezone": '+07:00'
 }
 
 

@@ -7,7 +7,6 @@ const {
   notIn,
   and,
   lt,
-  not,
 } = require('sequelize')['Op'];
 const id = require('shortid');
 const MAXIMUM_UNIQUE_PRICE = 200;
@@ -53,7 +52,7 @@ const createOrder = async options => {
       }
     }
     if (options.confirm) {
-
+      // TODO: if confirmed, fill the payment account id num
     }
     const quotation = await getQuotation(options);
     return quotation;
@@ -181,7 +180,7 @@ const getUniqueTransactionId = async (attempt = 0) => {
   if (attempt === MAXIMUM_RETRY) {
     throw new Error(`Error while getting unique transaction id after 100 times`)
   }
-  const trx_id = '55_V0ziAE'//id.generate();
+  const trx_id = id.generate();
   const duplicate = await transaction.findOne({
     where: {
       [and]: [{

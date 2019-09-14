@@ -3,6 +3,7 @@ moment.tz.setDefault('Asia/Jakarta');
 const r = require('request');
 const Promise = require('bluebird');
 const tough = require('tough-cookie');
+const apm = require('./apm');
 
 class Buy {
   constructor() {
@@ -265,6 +266,12 @@ class Buy {
         cookie,
         email
       } = userDetail
+
+      // adding user context to apm in order to be able to track issues with specific user faster and easier
+      apm.setUserContext({
+        id: lineId,
+        email
+      })
 
       const ticketClasses = new Set(['GEN', 'VIP', 'OFC']);
       if (ticketClasses.has(ticketClass)) {

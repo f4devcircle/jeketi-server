@@ -1,6 +1,5 @@
 require('dotenv').config();
-const https = require('https');
-const fs = require('fs');
+require('./services/apm');
 const express = require('express');
 const bodyParser = require('body-parser');
 const shows = require('./routes/shows.route');

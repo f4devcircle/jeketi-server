@@ -5,7 +5,7 @@ module.exports = {
    return queryInterface.bulkInsert('setlists', [{
      name: 'Saka Agari',
      slug: 'SA',
-     image_url: 'https://4.bp.blogspot.com/-NWTxS6Lg55M/WpwAjdBGDBI/AAAAAAAAC2E/8mt1lr4-Y6Ase9ZJCUGPTtV_52UiMTEMACLcBGAs/s1600/Saka%2BAgari%2BTeam%2BKIII%2Bshonichi.jpg',
+     image_url: 'https://storage.googleapis.com/aurora-bot/bot-images/saka%20agari%20k3%2007-2019.jpg',
      active: true,
      createdAt: Sequelize.fn('NOW'),
      updatedAt: Sequelize.fn('NOW')
@@ -30,6 +30,27 @@ module.exports = {
      active: false,
      createdAt: Sequelize.fn('NOW'),
      updatedAt: Sequelize.fn('NOW')
+   }, {
+     name: 'Pajama Drive',
+     slug: 'PD',
+     image_url: 'https://storage.googleapis.com/aurora-bot/bot-images/pajadora.jpg',
+     active: false,
+     createdAt: Sequelize.fn('NOW'),
+     updatedAt: Sequelize.fn('NOW')
+   }, {
+     name: 'Tunas di Balik Seragam',
+     slug: 'SNM',
+     image_url: 'https://storage.googleapis.com/aurora-bot/bot-images/snm.jpeg',
+     active: false,
+     createdAt: Sequelize.fn('NOW'),
+     updatedAt: Sequelize.fn('NOW')
+   }, {
+     name: 'Fajar Sang Idola',
+     slug: 'INY',
+     image_url: 'https://storage.googleapis.com/aurora-bot/bot-images/fajar.jpg',
+     active: false,
+     createdAt: Sequelize.fn('NOW'),
+     updatedAt: Sequelize.fn('NOW')
    }])
   },
 
@@ -37,7 +58,7 @@ module.exports = {
     const Op = Sequelize.Op;
     return queryInterface.bulkDelete('setlists', {
       name: {
-        [Op.in]: ['Saka Agari', 'Dewi Theater', 'Sekarang Sedang Jatuh Cinta', 'Sambil Menggandeng Erat Tanganku']
+        [Op.in]: ['Saka Agari', 'Dewi Theater', 'Sekarang Sedang Jatuh Cinta', 'Sambil Menggandeng Erat Tanganku', 'Pajama Drive', 'Tunas di Balik Seragam', 'Fajar Sang Idola']
       }
     }, {})
   }

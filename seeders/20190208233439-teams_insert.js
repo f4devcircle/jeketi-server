@@ -14,14 +14,18 @@ module.exports = {
     name: 'T',
      createdAt: Sequelize.fn('NOW'),
      updatedAt: Sequelize.fn('NOW')
+  }, {
+    name: 'Academy',
+    createdAt: Sequelize.fn('NOW'),
+    updatedAt: Sequelize.fn('NOW')
   }])
   },
 
   down: (queryInterface, Sequelize) => {
     const Op = Sequelize.Op;
-    return queryInterface.bulkDelete('setlists', {
+    return queryInterface.bulkDelete('teams', {
       name: {
-        [Op.in]: ['J', 'K3', 'T']
+        [Op.in]: ['J', 'K3', 'T', 'Academy']
       }
     }, {})
   }

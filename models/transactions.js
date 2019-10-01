@@ -12,6 +12,7 @@ module.exports = (sequelize, DataTypes) => {
     receiving_account_id: DataTypes.INTEGER,
     lineId: DataTypes.STRING,
     email: DataTypes.STRING,
+    topup_url: DataTypes.STRING,
     amount: DataTypes.INTEGER,
     subtotal: DataTypes.INTEGER,
     admin_fee: DataTypes.INTEGER,
@@ -32,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
     }
   });
   transactions.associate = function (models) {
-    // associations can be defined here
+    transactions.belongsTo(models.payment_method, { foreignKey: 'payment_method_id' })
   };
   return transactions;
 };

@@ -48,9 +48,12 @@ module.exports = {
       grand_total: {
         type: Sequelize.INTEGER
       },
+      topup_url: {
+        type: Sequelize.STRING
+      },
       status: {
         type: Sequelize.ENUM({
-          'values': ['CREATED', 'WAITING_FOR_PAYMENT', 'PAYMENT_RECEIVED', 'COMPLETED', 'EXPIRED']
+          'values': ['CREATED', 'WAITING_FOR_CONFIRMATION', 'CONFIRMED', 'WAITING_FOR_PAYMENT', 'PAID', 'COMPLETED', 'EXPIRED']
         })
       },
       expiredAt: {

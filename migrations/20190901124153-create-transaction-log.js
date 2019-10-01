@@ -13,7 +13,7 @@ module.exports = {
       },
       status: {
         type: Sequelize.ENUM({
-          'values': ['CREATED', 'WAITING_FOR_PAYMENT', 'PAYMENT_RECEIVED', 'COMPLETED', 'EXPIRED']
+          'values': ['CREATED', 'WAITING_FOR_CONFIRMATION', 'CONFIRMED', 'WAITING_FOR_PAYMENT', 'PAID', 'COMPLETED', 'EXPIRED']
         })
       },
       createdAt: {

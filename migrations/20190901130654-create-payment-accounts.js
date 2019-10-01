@@ -17,6 +17,10 @@ module.exports = {
       cvv: {
         type: Sequelize.STRING
       },
+      active: {
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE,

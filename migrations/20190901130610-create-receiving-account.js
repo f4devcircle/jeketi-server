@@ -17,7 +17,7 @@ module.exports = {
       name: {
         type: Sequelize.STRING
       },
-      status: {
+      active: {
         type: Sequelize.BOOLEAN
       },
       createdAt: {

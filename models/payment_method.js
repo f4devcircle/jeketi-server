@@ -7,6 +7,7 @@ module.exports = (sequelize, DataTypes) => {
   }, {});
   payment_method.associate = function(models) {
     // associations can be defined here
+    payment_method.hasMany(models.receiving_account, { foreignKey: 'payment_method_id' });
   };
   return payment_method;
 };

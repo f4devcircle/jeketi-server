@@ -29,11 +29,6 @@ const req = r.defaults({
 const get = Promise.promisify(req.get);
 const post = Promise.promisify(req.post);
 
-const self = {
-  cookie: '__utmb=154097059.9.10.1569348514; __utmt=1; __utmz=154097059.1568082740.1.1.utmcsr=(direct)|utmccn=(direct)|utmcmd=(none); cbcd=86dfc2d1814f4b4d67e3451c7caad685a49a8464; __utmc=154097059; __utma=154097059.569824675.1569348514.1569348514.1569348514.1; sid=pmsa5kc508j4s951ba78m4ai01',
-  email: 'co.terbang@gmail.com'
-}
-
 const getPricelistPage = async cookie => {
   const kue = cookie.split(';');
   const toughCookieJar = new tough.CookieJar(undefined, {
@@ -131,7 +126,6 @@ const buyPoint = async (amount, lineId) => {
 }
 
 const getConfirmationForm = page => {
-  fs.writeFileSync('./jejisyg.html', page)
   const $page = cheerio.load(page);
   const $pointsConfirmation = $page('.pinktable')[0];
   const $profileDetail = $page('.pinktable')[1];
@@ -200,7 +194,3 @@ module.exports = {
   verifyPoints,
   getPaymentDetail
 }
-
-// buyPoint('300000', '123456', 'a@b.com')
-// (getConfirmationLink)(require('fs').readFileSync('./pricelist.html'));
-// (login)(self.cookie);
